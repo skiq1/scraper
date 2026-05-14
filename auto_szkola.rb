@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# encoding: UTF-8
 
 require "dotenv/load"
 require "net/http"
@@ -98,14 +97,14 @@ end
 def load_known_terms
   return [] unless File.exist?(STATE_FILE)
 
-  JSON.parse(File.read(STATE_FILE))
+  JSON.parse(File.read(STATE_FILE, encoding: "UTF-8"))
 rescue JSON::ParserError
   warn "Warning: Could not parse #{STATE_FILE}"
   []
 end
 
 def save_known_terms(terms)
-  File.write(STATE_FILE, JSON.pretty_generate(terms))
+  File.write(STATE_FILE, JSON.pretty_generate(terms), mode: "w:UTF-8")
 end
 
 def format_term(term)
@@ -171,7 +170,7 @@ begin
   all_terms_by_id = (current_terms + known_terms).uniq { |term| term["id"] }
   save_known_terms(all_terms_by_id)
 rescue StandardError => e
-  logger.error("Error: #{e.message}")
-  warn "[#{Time.now}] Error: #{e.message}"
+  logger.error("Error: #{e.full_message}")
+  warn "[#{Time.now}] Error: #{e.full_message}"
   exit 1
 end
