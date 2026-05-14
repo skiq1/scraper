@@ -10,7 +10,7 @@ require "digest"
 require_relative "services/discord_notifier"
 require_relative "services/logger_factory"
 
-URL = ENV.fetch("AUTO_SZKOLA_URL", URL)
+URL = ENV.fetch("AUTO_SZKOLA_URL", nil)
 STATE_FILE = "known_terms.json"
 
 MONTHS = %w[
